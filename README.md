@@ -3,7 +3,7 @@
 
 ## Table of Contents
 
-The Sendgrid tool develops an interface with any cloud infrastructure (OCI, AWS , GCP and Azure among others) to send emails through SMTP for standard operations. 
+The Sendgrid tool/plugin develops an interface with any cloud infrastructure (OCI, AWS , GCP and Azure among others) to send emails through SMTP for standard operations. 
 
 ## Use Cases
 
