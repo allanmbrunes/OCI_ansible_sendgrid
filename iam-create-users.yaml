@@ -36,12 +36,12 @@
 
 - name: Send an email to a single recipient that the deployment was successful
   community.general.sendgrid:
-    api_key: "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"
+    api_key: "<<API>>"
     html_body: "yes"
-    from_address: "allan.mbs88@gmail.com"
+    from_address: "<<email_address>>"
     to_addresses:
       - "{{ item }}{{ dominio }}"
-    cc: "allan.mbs88@gmail.com"
+    cc: "<<email_address>>"
     subject: "Deployment success."
     body: "<strong>
     Name: {{ item }} <br> 
