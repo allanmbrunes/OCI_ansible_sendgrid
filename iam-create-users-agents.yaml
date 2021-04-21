@@ -1,0 +1,34 @@
+---
+
+- name: Creating Agent users on Oracle Cloud Infrastructure
+  hosts: localhost
+  collections:
+    - oracle.oci
+    - community.general.sendgrid
+  vars:
+    parent_compartment_ocid: "{{ lookup('env', 'PARENT_COMPARTMENT_OCID') }}"
+    group_name: "Agent"
+    dominio: "@company.com"
+    users:
+      - james.stwart
+      - sonia.ranche
+
+  tasks:
+   - name: Validate prerequisites
+     fail:
+       msg: "Environment variable {{item}} not defined. Please change."
+     when: item not in ansible_env
+     with_items:
+       - "PARENT_COMPARTMENT_OCID"
+    
+   - name: Get Group ID
+     oci_identity_group_facts:
+       name: "{{ group_name }}"
+       compartment_id: "{{ parent_compartment_ocid }}"
+     register: result 
+   - set_fact: 
+       group_ocid: "{{ result.groups[0].id }}"
+  
+   - name: Create users, add in groups and set password
+     include_tasks: "iam-create-users.yaml"
+     loop: "{{ users }}"
