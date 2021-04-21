@@ -1,9 +1,14 @@
 # Oracle Cloud Infrastructure - Sendgrid with Ansible
 
+The Sendgrid tool/plugin develops an interface with any cloud infrastructure (OCI, AWS , GCP and Azure among others) to send emails through SMTP for standard operations. 
 
 ## Table of Contents
 
-The Sendgrid tool/plugin develops an interface with any cloud infrastructure (OCI, AWS , GCP and Azure among others) to send emails through SMTP for standard operations. 
+- Ansible - playbook
+- OCI (Oracle Cloud Infrastructure) 
+- Create users
+- Group ID
+- Set Password
 
 ## Use Cases
 
