@@ -1,0 +1,52 @@
+---
+    
+- name: Create User
+  oci_identity_user:
+    name: "{{ item }}"
+    description: "Group member {{ group_name }}"
+    compartment_id: "{{ parent_compartment_ocid }}"
+    email: "{{ item }}{{ dominio }}"
+  register: createuser
+- set_fact:
+    user_ocid: "{{ createuser.user['id'] }}"
+- debug:
+    msg: "User {{ item }} created"
+  when: createuser.changed
+
+- name: Add user to group
+  oci_identity_user_group_membership:
+    user_id: "{{ user_ocid }}"
+    group_id: "{{ group_ocid }}"
+    compartment_id: "{{ parent_compartment_ocid }}"
+  register: result
+- set_fact:
+    user_group_membership_ocid: "{{ result.user_group_membership['id'] }}"
+ 
+- name: Create user password
+  oci_identity_ui_password:
+    user_id: "{{ user_ocid }}"
+  register: result
+  when: createuser.changed
+- set_fact:
+    user_password: "{{ result.ui_password['password'] }}"
+  when: createuser.changed
+- debug:
+    msg: "Password of {{ item }} is {{ user_password }}"
+  when: createuser.changed
+
+- name: Send an email to a single recipient that the deployment was successful
+  community.general.sendgrid:
+    api_key: "<<API>>"
+    html_body: "yes"
+    from_address: "<<email_address>>"
+    to_addresses:
+      - "{{ item }}{{ dominio }}"
+    cc: "<<email_address>>"
+    subject: "Deployment success."
+    body: "<strong>
+    Name: {{ item }} <br> 
+    E-mail: {{ item }}{{ dominio }} <br><br> 
+    Login: {{ item }} <br> 
+    Password: {{ result.ui_password['password'] }} <br> 
+    </strong>"
+  delegate_to: localhost
